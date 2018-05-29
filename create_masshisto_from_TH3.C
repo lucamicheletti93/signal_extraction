@@ -50,20 +50,27 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   for(int i = 0;i < N_pt_bin;i++){printf("[%i < pT < %i GeV/c]",min_pt_bin[i],max_pt_bin[i]);}
   printf("\n");
 
-  TH3D *hMassCostPhiHE_0pt2_2m = (TH3D*) hMassCostPhiHE_2m[0] -> Clone(Form("hMassCostPhiHE_%ipt%i_2m",min_pt_bin[0],max_pt_bin[0])); // 0 < pT < 1 GeV/c
+  sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[0],max_pt_bin[0]);
+  TH3D *hMassCostPhiHE_0pt2_2m = (TH3D*) hMassCostPhiHE_2m[0] -> Clone(); // 0 < pT < 1 GeV/c
+  hMassCostPhiHE_0pt2_2m -> SetTitle(TH3_NAME);
   hMassCostPhiHE_0pt2_2m -> Add(hMassCostPhiHE_2m[1]); // 1 < pT < 2 GeV/c
+  hMassCostPhiHE_0pt2_2m -> Draw();
 
-  TH3D *hMassCostPhiHE_2pt6_2m = (TH3D*) hMassCostPhiHE_2m[2] -> Clone(Form("hMassCostPhiHE_%ipt%i_2m",min_pt_bin[1],max_pt_bin[1])); // 2 < pT < 3 GeV/c
+  sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[1],max_pt_bin[1]);
+  TH3D *hMassCostPhiHE_2pt6_2m = (TH3D*) hMassCostPhiHE_2m[2] -> Clone(); // 2 < pT < 3 GeV/c
+  hMassCostPhiHE_2pt6_2m -> SetTitle(TH3_NAME);
   hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[3]); // 3 < pT < 4 GeV/c
   hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[4]); // 4 < pT < 5 GeV/c
   hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[5]); // 5 < pT < 6 GeV/c
 
-  TH3D *hMassCostPhiHE_6pt12_2m = (TH3D*) hMassCostPhiHE_2m[6] -> Clone(Form("hMassCostPhiHE_%ipt%i_2m",min_pt_bin[2],max_pt_bin[2])); // 6 < pT < 7 GeV/c
-  hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[7]); // 7 < pT < 8 GeV/c
-  hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[8]); // 8 < pT < 9 GeV/c
-  hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[9]); // 9 < pT < 10 GeV/c
-  hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[10]); // 10 < pT < 11 GeV/c
-  hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[11]); // 11 < pT < 12 GeV/c
+  sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[2],max_pt_bin[2]);
+  TH3D *hMassCostPhiHE_6pt12_2m = (TH3D*) hMassCostPhiHE_2m[6] -> Clone(); // 6 < pT < 7 GeV/c
+  hMassCostPhiHE_6pt12_2m -> SetTitle(TH3_NAME);
+  hMassCostPhiHE_6pt12_2m -> Add(hMassCostPhiHE_2m[7]); // 7 < pT < 8 GeV/c
+  hMassCostPhiHE_6pt12_2m -> Add(hMassCostPhiHE_2m[8]); // 8 < pT < 9 GeV/c
+  hMassCostPhiHE_6pt12_2m -> Add(hMassCostPhiHE_2m[9]); // 9 < pT < 10 GeV/c
+  hMassCostPhiHE_6pt12_2m -> Add(hMassCostPhiHE_2m[10]); // 10 < pT < 11 GeV/c
+  hMassCostPhiHE_6pt12_2m -> Add(hMassCostPhiHE_2m[11]); // 11 < pT < 12 GeV/c
 
   //============================================================================
   printf("Creating mass histos... \n");
@@ -88,17 +95,17 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
 
         if(min_pt_bin[k] == 0){
           hist_mass_HE = (TH1D*) hMassCostPhiHE_0pt2_2m -> ProjectionZ(hist_mass_HE_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
-          if(save_file){FILE_OUT_COST_PHI_0pt2.cd(); hist_mass_HE -> Write();}
+          if(save_file){FILE_OUT_COST_PHI_0pt2.cd(); hist_mass_HE -> SetTitle(hist_mass_HE_name); hist_mass_HE -> Write();}
           //hist_mass_CS = (TH1D*) hMassCostPhiCS_0pt2_2m -> ProjectionZ(hist_mass_CS_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
         }
         if(min_pt_bin[k] == 2){
           hist_mass_HE = (TH1D*) hMassCostPhiHE_2pt6_2m -> ProjectionZ(hist_mass_HE_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
-          if(save_file){FILE_OUT_COST_PHI_2pt6.cd(); hist_mass_HE -> Write();}
+          if(save_file){FILE_OUT_COST_PHI_2pt6.cd(); hist_mass_HE -> SetTitle(hist_mass_HE_name); hist_mass_HE -> Write();}
           //hist_mass_CS = (TH1D*) hMassCostPhiCS_2pt6_2m -> ProjectionZ(hist_mass_CS_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
         }
         if(min_pt_bin[k] == 6){
           hist_mass_HE = (TH1D*) hMassCostPhiHE_6pt12_2m -> ProjectionZ(hist_mass_HE_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
-          if(save_file){FILE_OUT_COST_PHI_6pt12.cd(); hist_mass_HE -> Write();}
+          if(save_file){FILE_OUT_COST_PHI_6pt12.cd(); hist_mass_HE -> SetTitle(hist_mass_HE_name); hist_mass_HE -> Write();}
           //hist_mass_CS = (TH1D*) hMassCostPhiCS_6pt12_2m -> ProjectionZ(hist_mass_CS_name,min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
         }
 

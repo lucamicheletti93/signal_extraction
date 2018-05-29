@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include <TROOT.h>
 #include <TMinuit.h>
 #include <TCanvas.h>
 #include <TFile.h>
@@ -27,6 +28,7 @@
 #include <TCollection.h>
 #include <TKey.h>
 #include <TGaxis.h>
+#include <settings.h>
 #endif
 
 Double_t Func_VWG(Double_t *, Double_t *);
@@ -35,14 +37,15 @@ Double_t Func_Jpsi_CB2_fix(Double_t *, Double_t *);
 Double_t Func_Psi2s_CB2(Double_t *, Double_t *);
 Double_t Func_Psi2s_CB2_fix(Double_t *, Double_t *);
 Double_t Func_tot(Double_t *, Double_t *);
+
 void single_histo_fit();
 void loop_on_histos();
-void fit_of_minv(TH1D *);
+void fit_of_minv(TH1D *, int, int);
 
 Double_t scaling_factor = 1.05154; //factor introduced to pass from the sigma of Jpsi to the sigma of Psi(2S)
 double n_psi2s = 0, stat_psi2s = 0, n_jpsi = 0, stat_jpsi = 0;
 char test_label[100], fit_status[10];
-double min_cost = 0, max_cost = 0, min_phi = 0, max_phi = 0;
+//double min_cost = 0, max_cost = 0, min_phi = 0, max_phi = 0;
 //==============================================================================
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //==============================================================================
@@ -61,23 +64,23 @@ void single_histo_fit(){
   hist_minv -> SetMarkerSize(0.7);
   min_cost = 0.2, max_cost = 0.3, min_phi = 1.57, max_phi = 1.76;*/
 
-  fit_of_minv(hist_minv);
+  fit_of_minv(hist_minv, 0, 0);
 }
 //==============================================================================
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //==============================================================================
 void loop_on_histos(){
 
+  gSystem -> CompileMacro("settings.h");
+  gROOT -> ProcessLine(".x binning.C");
+
   bool save_tree = kFALSE;
-  const int N_cost_bins_BC = 18;
-  const int N_phi_bins_BC = 10;
-  int N_Jpsi_HE[N_cost_bins_BC][N_phi_bins_BC];
-  int Stat_Jpsi_HE[N_cost_bins_BC][N_phi_bins_BC];
+  //const int N_cost_bins = 18;
+  //const int N_phi_bins = 10;
+  int N_Jpsi_HE[N_cost_bins][N_phi_bins];
+  int Stat_Jpsi_HE[N_cost_bins][N_phi_bins];
   int counter_cost = 0; // counter to fill the matrix
   int counter_phi = 0; // counter to fill the matrix
-
-  //TFile *file = new TFile("mass_histos_cost_phi.root");
-  //TH1D *hist_minv = (TH1D*) file -> Get("1cost25_1phi25");
 
   vector <int> N_Jpsi;
   vector <int> stat_Jpsi;
@@ -88,6 +91,7 @@ void loop_on_histos(){
 
   string const filename = "/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_2pt6.root";
   TFile *file = new TFile(filename.c_str());
+
   TIter iter(file -> GetListOfKeys());
   TKey *key;
   while(key = (TKey*)iter()){
@@ -97,9 +101,9 @@ void loop_on_histos(){
 
       if(hist_name.find("HE") != std::string::npos){
         hist_minv_integrated -> Add(hist_minv);
-        //fit_of_minv(hist_minv);
+        fit_of_minv(hist_minv,counter_cost,counter_phi);
 
-        if(counter_phi < N_phi_bins_BC){
+        if(counter_phi < N_phi_bins){
           N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
           Stat_Jpsi_HE[counter_cost][counter_phi] = stat_jpsi;
           counter_phi++;
@@ -117,7 +121,7 @@ void loop_on_histos(){
       }
   }
 
-  fit_of_minv(hist_minv_integrated);
+  fit_of_minv(hist_minv_integrated,100,100);
 
   int integral = 0;
   for(int i = 0;i < N_Jpsi.size();i++){
@@ -130,8 +134,8 @@ void loop_on_histos(){
   //============================================================================
 
   printf("MATRIX OF N_Jpsi \n");
-  for(int i = 0;i < N_cost_bins_BC;i++){
-    for(int j = 0;j < N_phi_bins_BC;j++){
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
       cout << N_Jpsi_HE[i][j] << ",";
     }
     cout << endl;
@@ -139,8 +143,8 @@ void loop_on_histos(){
 
 
   printf("MATRIX OF STAT ERRORS \n");
-  for(int i = 0;i < N_cost_bins_BC;i++){
-    for(int j = 0;j < N_phi_bins_BC;j++){
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
       cout << Stat_Jpsi_HE[i][j] << ",";
     }
     cout << endl;
@@ -165,7 +169,7 @@ void loop_on_histos(){
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-void fit_of_minv(TH1D *hist_minv){
+void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
 
   char *sig = "CB2";
   char *bck = "VWG";
@@ -251,18 +255,7 @@ void fit_of_minv(TH1D *hist_minv){
       func_tot -> SetParameter(5,3.096);
       func_tot -> SetParameter(6,7.0e-02);
       func_tot -> SetParLimits(6,6.0e-02,9.0e-02);
-      //////////////////////////////////////////////////////////////////////////
-      //SPECIAL FIT CONDITIONS
-      //if(strcmp(hist_minv -> GetName(),"2pt6_81cost100_21phi22")==0 || strcmp(hist_minv -> GetName(),"2pt6_1cost25_51phi65")){
-      //if(strcmp(hist_minv -> GetName(),"2pt6_81cost100_21phi22")==0){
-        //func_tot -> FixParameter(5,3.096);
-        //func_tot -> FixParameter(6,7.0e-02);
-      //}
-      //else{
-        //func_tot -> SetParameter(5,func_Jpsi_CB2 -> GetParameter(5));
-        //func_tot -> SetParameter(6,func_Jpsi_CB2 -> GetParameter(6));
-      //}
-      //////////////////////////////////////////////////////////////////////////
+
       if(strcmp(tails_fix,"yes")==0){
         func_tot -> FixParameter(7,func_Jpsi_CB2 -> GetParameter(7));
         func_tot -> FixParameter(8,func_Jpsi_CB2 -> GetParameter(8));
@@ -278,9 +271,6 @@ void fit_of_minv(TH1D *hist_minv){
       //func_tot -> SetParameter(11,func_Jpsi_CB2 -> GetParameter(11));
     }
     else{func_tot -> SetParameters(func_tot -> GetParameters());}
-    //if(strcmp(hist_minv -> GetName(),"2pt6_76cost100_36phi50")==0) hist_minv -> Rebin(2);
-    //if(strcmp(hist_minv -> GetName(),"2pt6_1cost25_36phi50")==0) hist_minv -> Rebin(2);
-    //if(strcmp(hist_minv -> GetName(),"2pt6_1cost25_51phi65")==0) hist_minv -> Rebin(2);
     fit_ptr = (TFitResultPtr) hist_minv -> Fit(func_tot,"RLS0");
     if(gMinuit->fCstatu.Contains("CONVERGED")) break;
   }
@@ -437,14 +427,15 @@ void fit_of_minv(TH1D *hist_minv){
   lat4 -> SetNDC();
   lat4 -> SetTextFont(42);
 
-  //sprintf(title,"#minus%2.1f < cos#it{#theta}^{HE} < #minus%2.1f",TMath::Abs(min_cost),TMath::Abs(max_cost));
-  sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",min_cost,max_cost);
+  sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",value_cost[counter_cost],value_cost[counter_cost+1]);
+  if(counter_cost == 100) sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",-1,1);
   TLatex *lat5 = new TLatex(0.49,0.48,title);
   lat5 -> SetTextSize(0.05);
   lat5 -> SetNDC();
   lat5 -> SetTextFont(42);
 
-  sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",min_phi,max_phi);
+  sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",value_phi[counter_phi],value_phi[counter_phi+1]);
+  if(counter_phi == 100) sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",0,PI);
   TLatex *lat6 = new TLatex(0.49,0.41,title);
   lat6 -> SetTextSize(0.05);
   lat6 -> SetNDC();
@@ -455,31 +446,6 @@ void fit_of_minv(TH1D *hist_minv){
   lat7 -> SetTextSize(0.05);
   lat7 -> SetNDC();
   lat7 -> SetTextFont(42);
-
-  /*sprintf(title,"N_{J/#psi} = %3.0f #pm %3.0f",n_jpsi,stat_jpsi);
-  TLatex *lat6 = new TLatex(0.4,0.44,title);
-  lat6 -> SetTextSize(0.05);
-  lat6 -> SetNDC();
-  lat6 -> SetTextFont(42);*/
-
-  //TPaveText *t_spectrum = new TPaveText(0.65,0.75,0.95,0.95,"brNDC");
-  //t_spectrum -> SetFillColor(kWhite);
-  //sprintf(title,"%3.2f < cos#theta_{HE} < %3.2f",);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"%3.2f < #phi_{HE} < %3.2f",);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"#chi^{2}/NDF = %3.1f",ChiSquare_NDF);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"N_{J/#psi} = %3.0f #pm %3.0f",n_jpsi,stat_jpsi);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"S/B (J/#psi) = %4.3f",SB_Jpsi);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"#sigma_{J/#psi} = %4.3f",sigma_Jpsi);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"N_{#psi(2S)} = %3.0f #pm %3.0f",n_psi2s,stat_psi2s);
-  //t_spectrum -> AddText(title);
-  //sprintf(title,"S/B (#psi(2S)) = %4.3f",SB_Psi2s);
-  //t_spectrum -> AddText(title);
 
   TCanvas *c_spectrum = new TCanvas("c_spectrum","c_spectrum",65,73,900,806);
   c_spectrum -> Range(1.825,-6776.052,5.019444,37862.12);
@@ -492,8 +458,6 @@ void fit_of_minv(TH1D *hist_minv){
   c_spectrum -> SetBottomMargin(0.1518219);
   c_spectrum -> SetFrameBorderMode(0);
   c_spectrum -> SetFrameBorderMode(0);
-
-
 
   h_spectrum -> Draw();
   hist_minv -> Draw("sameE");
