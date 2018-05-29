@@ -64,7 +64,7 @@ void single_histo_fit(){
   hist_minv -> SetMarkerSize(0.7);
   min_cost = 0.2, max_cost = 0.3, min_phi = 1.57, max_phi = 1.76;*/
 
-  fit_of_minv(hist_minv, 0, 0);
+  fit_of_minv(hist_minv,0,0);
 }
 //==============================================================================
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -74,7 +74,7 @@ void loop_on_histos(){
   gSystem -> CompileMacro("settings.h");
   gROOT -> ProcessLine(".x binning.C");
 
-  bool save_tree = kFALSE;
+  bool save_tree = kTRUE;
   //const int N_cost_bins = 18;
   //const int N_phi_bins = 10;
   int N_Jpsi_HE[N_cost_bins][N_phi_bins];
@@ -89,7 +89,8 @@ void loop_on_histos(){
 
   TH1D *hist_minv_integrated = new TH1D("hist_minv_integrated","hist_minv_integrated",120,2,5);
 
-  string const filename = "/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_2pt6.root";
+  //string const filename = "/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_2pt6.root";
+  string const filename = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_2pt6.root";
   TFile *file = new TFile(filename.c_str());
 
   TIter iter(file -> GetListOfKeys());
@@ -160,10 +161,10 @@ void loop_on_histos(){
     output_tree -> Branch("Stat_Jpsi_HE",Stat_Jpsi_HE,"Stat_Jpsi_HE[18][10]/I");
     output_tree -> Fill();
 
-    TFile *output_file = new TFile("../PRELIMINARY/N_Jpsi.root","RECREATE");
+    TFile *output_file = new TFile("/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/N_Jpsi.root","RECREATE");
     output_tree -> Write();
     output_file -> Close();
-    printf("The file is saved in ../PRELIMINARY \n");
+    printf("The file is saved in /Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/ \n");
   }
 
 }
@@ -428,14 +429,14 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   lat4 -> SetTextFont(42);
 
   sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",value_cost[counter_cost],value_cost[counter_cost+1]);
-  if(counter_cost == 100) sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",-1,1);
+  if(counter_cost == 100) sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",-1.,1.);
   TLatex *lat5 = new TLatex(0.49,0.48,title);
   lat5 -> SetTextSize(0.05);
   lat5 -> SetNDC();
   lat5 -> SetTextFont(42);
 
   sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",value_phi[counter_phi],value_phi[counter_phi+1]);
-  if(counter_phi == 100) sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",0,PI);
+  if(counter_phi == 100) sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",0.,PI);
   TLatex *lat6 = new TLatex(0.49,0.41,title);
   lat6 -> SetTextSize(0.05);
   lat6 -> SetNDC();
