@@ -46,17 +46,17 @@ double Dcost[N_cost_bins];
 // RANGE -PI < phi < PI ; -1 < cost < 1
 //------------------------------------------------------------------------------
 const int N_phi_bins = 10;
-//const int N_TH3_phi_bins = 50;
-const int N_TH3_phi_bins = 100;
+const int N_TH3_phi_bins = 50;
+//const int N_TH3_phi_bins = 100;
 
-//int min_phi_bin[N_phi_bins] = {1,16,19,21,23,26,29,31,33,36};
-//int max_phi_bin[N_phi_bins] = {15,18,20,22,25,28,30,32,35,50};
-int min_phi_bin[N_phi_bins] = {1,31,37,41,45,51,57,61,65,71};
-int max_phi_bin[N_phi_bins] = {30,36,40,44,50,56,60,64,70,100};
+int min_phi_bin[N_phi_bins] = {1,16,19,21,23,26,29,31,33,36};
+int max_phi_bin[N_phi_bins] = {15,18,20,22,25,28,30,32,35,50};
+//int min_phi_bin[N_phi_bins] = {1,31,37,41,45,51,57,61,65,71};
+//int max_phi_bin[N_phi_bins] = {30,36,40,44,50,56,60,64,70,100};
 
 const int dim_phi = N_phi_bins + 1;
-//double bins_phi[dim_phi] = {0,15,18,20,22,25,28,30,32,35,50};
-double bins_phi[dim_phi] = {0,30,36,40,44,50,56,60,64,70,100};
+double bins_phi[dim_phi] = {0,15,18,20,22,25,28,30,32,35,50};
+//double bins_phi[dim_phi] = {0,30,36,40,44,50,56,60,64,70,100};
 double width_phi[dim_phi];
 
 double min_phi = 0;

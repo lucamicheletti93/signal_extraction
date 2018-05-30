@@ -102,7 +102,7 @@ void loop_on_histos(){
 
       if(hist_name.find("HE") != std::string::npos){
         hist_minv_integrated -> Add(hist_minv);
-        fit_of_minv(hist_minv,counter_cost,counter_phi);
+        //fit_of_minv(hist_minv,counter_cost,counter_phi);
 
         if(counter_phi < N_phi_bins){
           N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
@@ -122,13 +122,20 @@ void loop_on_histos(){
       }
   }
 
-  fit_of_minv(hist_minv_integrated,100,100);
+  //fit_of_minv(hist_minv_integrated,100,100);
 
   int integral = 0;
   for(int i = 0;i < N_Jpsi.size();i++){
     integral += N_Jpsi[i];
   }
   cout << "SUM OF HISTOS = " << integral << endl;
+
+  file -> ls();
+  //TH1D *hist_prova = (TH1D*) file -> Get("HE_2pt6");
+  //fit_of_minv(hist_prova,100,100);
+
+  //hist_prova -> Draw();
+  return;
 
   //============================================================================
   //MATRIX OF THE SIGNAL

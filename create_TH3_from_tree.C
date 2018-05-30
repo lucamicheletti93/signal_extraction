@@ -30,7 +30,7 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   clock1 -> Start();
   //char *PATH_IN = "../GRID_FILES/";
   //char *PATH_IN = "../../../../../PbPb_2015_TREE/"; //PATH FOR MAC
-  char *PATH_IN = "../../../../../../PbPb_2015_TREE/"; // MODIFY THE PATH
+  char *PATH_IN = "../../../../../PbPb_2015_TREE/"; // MODIFY THE PATH
   char FILE_NAME_IN[400];
   sprintf(FILE_NAME_IN,"%s/Tree_%i.root",PATH_IN,RUN_NUMBER);
   //sprintf(FILE_NAME_IN,"Tree_%i.root",RUN_NUMBER);
@@ -45,33 +45,33 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   TH3D *hMassCostPhiHE_6pt12_2m = new TH3D("hMassCostPhiHE_6pt12_2m","hMassCostPhiHE_6pt12_2m",100,-1,1,100,0,PI,120,2,5);
   TH3D *hMassCostPhiCS_6pt12_2m = new TH3D("hMassCostPhiCS_6pt12_2m","hMassCostPhiCS_6pt12_2m",100,-1,1,100,0,PI,120,2,5);*/
 
-  TH3D *hMassCostPhiHE_0pt1_2m = new TH3D("hMassCostPhiHE_0pt1_2m","hMassCostPhiHE_0pt1_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_1pt2_2m = new TH3D("hMassCostPhiHE_1pt2_2m","hMassCostPhiHE_1pt2_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_2pt3_2m = new TH3D("hMassCostPhiHE_2pt3_2m","hMassCostPhiHE_2pt3_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_3pt4_2m = new TH3D("hMassCostPhiHE_3pt4_2m","hMassCostPhiHE_3pt4_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_4pt5_2m = new TH3D("hMassCostPhiHE_4pt5_2m","hMassCostPhiHE_4pt5_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_5pt6_2m = new TH3D("hMassCostPhiHE_5pt6_2m","hMassCostPhiHE_5pt6_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_6pt7_2m = new TH3D("hMassCostPhiHE_6pt7_2m","hMassCostPhiHE_6pt7_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_7pt8_2m = new TH3D("hMassCostPhiHE_7pt8_2m","hMassCostPhiHE_7pt8_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_8pt9_2m = new TH3D("hMassCostPhiHE_8pt9_2m","hMassCostPhiHE_8pt9_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_9pt10_2m = new TH3D("hMassCostPhiHE_9pt10_2m","hMassCostPhiHE_9pt10_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_10pt11_2m = new TH3D("hMassCostPhiHE_10pt11_2m","hMassCostPhiHE_10pt11_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_11pt12_2m = new TH3D("hMassCostPhiHE_11pt12_2m","hMassCostPhiHE_11pt12_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiHE_12ptinf_2m = new TH3D("hMassCostPhiHE_12ptinf_2m","hMassCostPhiHE_12ptinf_2m",100,-1,1,100,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_0pt1_2m = new TH3D("hMassCostPhiHE_0pt1_2m","hMassCostPhiHE_0pt1_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_1pt2_2m = new TH3D("hMassCostPhiHE_1pt2_2m","hMassCostPhiHE_1pt2_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_2pt3_2m = new TH3D("hMassCostPhiHE_2pt3_2m","hMassCostPhiHE_2pt3_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_3pt4_2m = new TH3D("hMassCostPhiHE_3pt4_2m","hMassCostPhiHE_3pt4_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_4pt5_2m = new TH3D("hMassCostPhiHE_4pt5_2m","hMassCostPhiHE_4pt5_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_5pt6_2m = new TH3D("hMassCostPhiHE_5pt6_2m","hMassCostPhiHE_5pt6_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_6pt7_2m = new TH3D("hMassCostPhiHE_6pt7_2m","hMassCostPhiHE_6pt7_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_7pt8_2m = new TH3D("hMassCostPhiHE_7pt8_2m","hMassCostPhiHE_7pt8_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_8pt9_2m = new TH3D("hMassCostPhiHE_8pt9_2m","hMassCostPhiHE_8pt9_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_9pt10_2m = new TH3D("hMassCostPhiHE_9pt10_2m","hMassCostPhiHE_9pt10_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_10pt11_2m = new TH3D("hMassCostPhiHE_10pt11_2m","hMassCostPhiHE_10pt11_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_11pt12_2m = new TH3D("hMassCostPhiHE_11pt12_2m","hMassCostPhiHE_11pt12_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_12ptinf_2m = new TH3D("hMassCostPhiHE_12ptinf_2m","hMassCostPhiHE_12ptinf_2m",100,-1,1,50,0,PI,120,2,5);
 
-  TH3D *hMassCostPhiCS_0pt1_2m = new TH3D("hMassCostPhiCS_0pt1_2m","hMassCostPhiCS_0pt1_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_1pt2_2m = new TH3D("hMassCostPhiCS_1pt2_2m","hMassCostPhiCS_1pt2_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_2pt3_2m = new TH3D("hMassCostPhiCS_2pt3_2m","hMassCostPhiCS_2pt3_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_3pt4_2m = new TH3D("hMassCostPhiCS_3pt4_2m","hMassCostPhiCS_3pt4_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_4pt5_2m = new TH3D("hMassCostPhiCS_4pt5_2m","hMassCostPhiCS_4pt5_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_5pt6_2m = new TH3D("hMassCostPhiCS_5pt6_2m","hMassCostPhiCS_5pt6_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_6pt7_2m = new TH3D("hMassCostPhiCS_6pt7_2m","hMassCostPhiCS_6pt7_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_7pt8_2m = new TH3D("hMassCostPhiCS_7pt8_2m","hMassCostPhiCS_7pt8_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_8pt9_2m = new TH3D("hMassCostPhiCS_8pt9_2m","hMassCostPhiCS_8pt9_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_9pt10_2m = new TH3D("hMassCostPhiCS_9pt10_2m","hMassCostPhiCS_9pt10_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_10pt11_2m = new TH3D("hMassCostPhiCS_10pt11_2m","hMassCostPhiCS_10pt11_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_11pt12_2m = new TH3D("hMassCostPhiCS_11pt12_2m","hMassCostPhiCS_11pt12_2m",100,-1,1,100,0,PI,120,2,5);
-  TH3D *hMassCostPhiCS_12ptinf_2m = new TH3D("hMassCostPhiCS_12ptinf_2m","hMassCostPhiCS_12ptinf_2m",100,-1,1,100,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_0pt1_2m = new TH3D("hMassCostPhiCS_0pt1_2m","hMassCostPhiCS_0pt1_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_1pt2_2m = new TH3D("hMassCostPhiCS_1pt2_2m","hMassCostPhiCS_1pt2_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_2pt3_2m = new TH3D("hMassCostPhiCS_2pt3_2m","hMassCostPhiCS_2pt3_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_3pt4_2m = new TH3D("hMassCostPhiCS_3pt4_2m","hMassCostPhiCS_3pt4_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_4pt5_2m = new TH3D("hMassCostPhiCS_4pt5_2m","hMassCostPhiCS_4pt5_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_5pt6_2m = new TH3D("hMassCostPhiCS_5pt6_2m","hMassCostPhiCS_5pt6_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_6pt7_2m = new TH3D("hMassCostPhiCS_6pt7_2m","hMassCostPhiCS_6pt7_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_7pt8_2m = new TH3D("hMassCostPhiCS_7pt8_2m","hMassCostPhiCS_7pt8_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_8pt9_2m = new TH3D("hMassCostPhiCS_8pt9_2m","hMassCostPhiCS_8pt9_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_9pt10_2m = new TH3D("hMassCostPhiCS_9pt10_2m","hMassCostPhiCS_9pt10_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_10pt11_2m = new TH3D("hMassCostPhiCS_10pt11_2m","hMassCostPhiCS_10pt11_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_11pt12_2m = new TH3D("hMassCostPhiCS_11pt12_2m","hMassCostPhiCS_11pt12_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_12ptinf_2m = new TH3D("hMassCostPhiCS_12ptinf_2m","hMassCostPhiCS_12ptinf_2m",100,-1,1,50,0,PI,120,2,5);
   //============================================================================
   //OPENING THE FILE
   //============================================================================
@@ -236,7 +236,7 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   clock2 -> Start();
 
   //char *PATH_OUT = "GRID_FILES/ANGULAR_DISTRIBUTIONS/DIMUON_MASS2_CORRECT";
-  char *PATH_OUT = "HISTOS_FOR_SIGNAL_EXTRACTION";
+  char *PATH_OUT = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION"; // for mac
   char FILE_NAME_OUT[400];
   sprintf(FILE_NAME_OUT,"%s/HistosFromTree_%i.root",PATH_OUT,RUN_NUMBER);
   //sprintf(FILE_NAME_OUT,"HistosFromTree_Luca_%i.root",RUN_NUMBER);
