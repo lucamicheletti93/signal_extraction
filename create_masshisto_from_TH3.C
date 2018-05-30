@@ -54,7 +54,6 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   TH3D *hMassCostPhiHE_0pt2_2m = (TH3D*) hMassCostPhiHE_2m[0] -> Clone(); // 0 < pT < 1 GeV/c
   hMassCostPhiHE_0pt2_2m -> SetTitle(TH3_NAME);
   hMassCostPhiHE_0pt2_2m -> Add(hMassCostPhiHE_2m[1]); // 1 < pT < 2 GeV/c
-  hMassCostPhiHE_0pt2_2m -> Draw();
 
   sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[1],max_pt_bin[1]);
   TH3D *hMassCostPhiHE_2pt6_2m = (TH3D*) hMassCostPhiHE_2m[2] -> Clone(); // 2 < pT < 3 GeV/c
@@ -76,9 +75,9 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   printf("Creating mass histos... \n");
   //============================================================================
   if(save_file){
-    TFile FILE_OUT_COST_PHI_0pt2("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_0pt2.root","RECREATE");
-    TFile FILE_OUT_COST_PHI_2pt6("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_2pt6.root","RECREATE");
-    TFile FILE_OUT_COST_PHI_6pt12("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/mass_histos_cost_phi_6pt12.root","RECREATE");
+    TFile FILE_OUT_COST_PHI_0pt2("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_0pt2.root","RECREATE");
+    TFile FILE_OUT_COST_PHI_2pt6("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root","RECREATE");
+    TFile FILE_OUT_COST_PHI_6pt12("/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_6pt12.root","RECREATE");
   }
 
   TH1D *hist_mass_HE;
