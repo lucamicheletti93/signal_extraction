@@ -24,9 +24,12 @@
 #include <TMatrixDSym.h>
 #include <TPaveText.h>
 #include <TGaxis.h>
+#include <settings.h>
 #endif
 
 void binning(){
+
+  gSystem -> CompileMacro("settings.h");
 
   //============================================================================
   //CONVERSION FACTOR cost
@@ -41,6 +44,7 @@ void binning(){
   for(int i = 0;i < dim_cost;i++){
     diff += width_cost[i];
     value_cost[i] = min_cost + diff;
+    cout << value_cost[i] << endl;
     if(TMath::Abs(value_cost[i]) < 0.01){value_cost[i] = 0.;}
   }
 
@@ -65,6 +69,7 @@ void binning(){
   for(int i = 0;i < dim_phi;i++){
     diff += width_phi[i];
     value_phi[i] = min_phi + diff;
+    cout << value_phi[i] << endl;
     if(TMath::Abs(value_phi[i]) < 0.01){value_phi[i] = 0.;}
   }
 

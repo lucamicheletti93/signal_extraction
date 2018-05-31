@@ -29,6 +29,7 @@
 #include <TKey.h>
 #include <TGaxis.h>
 #include <settings.h>
+#include "binning.C"
 #endif
 
 Double_t Func_VWG(Double_t *, Double_t *);
@@ -72,9 +73,33 @@ void single_histo_fit(){
 void loop_on_histos(){
 
   gSystem -> CompileMacro("settings.h");
-  gROOT -> ProcessLine(".x binning.C");
+  //gROOT -> ProcessLine(".x binning.C");
 
-  bool save_tree = kFALSE;
+  for(int i = 0;i < N_cost_bins;i++){
+    width_cost[i+1] = ((max_cost - min_cost)/(double) N_TH3_cost_bins)*(bins_cost[i+1] - bins_cost[i]);
+  }
+
+  double diff = 0;
+  for(int i = 0;i < dim_cost;i++){
+    diff += width_cost[i];
+    value_cost[i] = min_cost + diff;
+    cout << value_cost[i] << endl;
+    if(TMath::Abs(value_cost[i]) < 0.01){value_cost[i] = 0.;}
+  }
+
+  for(int i = 0;i < N_phi_bins;i++){
+    width_phi[i+1] = ((max_phi - min_phi)/(double) N_TH3_phi_bins)*(bins_phi[i+1] - bins_phi[i]);
+  }
+
+  diff = 0;
+  for(int i = 0;i < dim_phi;i++){
+    diff += width_phi[i];
+    value_phi[i] = min_phi + diff;
+    cout << value_phi[i] << endl;
+    if(TMath::Abs(value_phi[i]) < 0.01){value_phi[i] = 0.;}
+  }
+
+  bool save_tree = kTRUE;
   //const int N_cost_bins = 18;
   //const int N_phi_bins = 10;
   int N_Jpsi_HE[N_cost_bins][N_phi_bins];
@@ -89,8 +114,7 @@ void loop_on_histos(){
 
   TH1D *hist_minv_integrated = new TH1D("hist_minv_integrated","hist_minv_integrated",120,2,5);
 
-  string const filename = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for ubuntu
-  //string const filename = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for mac
+  string const filename = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root";
   TFile *file = new TFile(filename.c_str());
 
   TIter iter(file -> GetListOfKeys());
@@ -102,7 +126,7 @@ void loop_on_histos(){
 
       if(hist_name.find("HE") != std::string::npos){
         hist_minv_integrated -> Add(hist_minv);
-        //fit_of_minv(hist_minv,counter_cost,counter_phi);
+        fit_of_minv(hist_minv,counter_cost,counter_phi);
 
         if(counter_phi < N_phi_bins){
           N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
@@ -152,7 +176,7 @@ void loop_on_histos(){
   }
 
   TCanvas *ccc = new TCanvas("ccc","ccc",20,20,600,600);
-  hist_N_Jpsi_HE -> Draw("COLZ");
+  hist_N_Jpsi_HE -> Draw("COLZtext");
 
 
   printf("MATRIX OF N_Jpsi \n");
@@ -184,6 +208,7 @@ void loop_on_histos(){
 
     TFile *output_file = new TFile("~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/N_Jpsi.root","RECREATE");
     output_tree -> Write();
+    hist_N_Jpsi_HE -> Write();
     output_file -> Close();
     printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
   }

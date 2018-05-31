@@ -32,8 +32,6 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   gSystem -> CompileMacro("settings.h");
   gROOT -> ProcessLine(".x binning.C");
 
-  //char INPUT_FILE_NAME[300] = "/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/Histos_full_statistics.root"; // for ubuntu
-  //char INPUT_FILE_NAME[300] = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/Histos_full_statistics.root"; // for mac
   char INPUT_FILE_NAME[300] = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/Histos_full_statistics.root";
   printf("Opening %s ... \n",INPUT_FILE_NAME);
   TFile *input_file = new TFile(INPUT_FILE_NAME,"READ");
@@ -47,7 +45,7 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   }
 
   sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",2,6);
-  hMassCostPhiHE_2m_2pt6_prova = (TH3D*) input_file -> Get(TH3_NAME);
+  hMassCostPhiHE_2m_2pt6_check = (TH3D*) input_file -> Get(TH3_NAME);
 
   //============================================================================
   printf("Defining the pT ranges ... \n");
@@ -72,10 +70,7 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   cout << hMassCostPhiHE_2m[4] -> GetEntries() << endl;
   cout << hMassCostPhiHE_2m[5] -> GetEntries() << endl;
   cout << hMassCostPhiHE_2pt6_2m -> GetEntries() << endl;
-
-
-
-  return;
+  cout << hMassCostPhiHE_2m_2pt6_check -> GetEntries() << endl;
 
   sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[2],max_pt_bin[2]);
   TH3D *hMassCostPhiHE_6pt12_2m = (TH3D*) hMassCostPhiHE_2m[6] -> Clone(); // 6 < pT < 7 GeV/c
