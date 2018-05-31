@@ -37,9 +37,6 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   char INPUT_FILE_NAME[300] = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/Histos_full_statistics.root";
   printf("Opening %s ... \n",INPUT_FILE_NAME);
   TFile *input_file = new TFile(INPUT_FILE_NAME,"READ");
-  input_file -> ls();
-
-  return;
 
   char TH3_NAME[50];
   const int Npt_ranges = 12;

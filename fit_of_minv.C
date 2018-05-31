@@ -89,8 +89,8 @@ void loop_on_histos(){
 
   TH1D *hist_minv_integrated = new TH1D("hist_minv_integrated","hist_minv_integrated",120,2,5);
 
-  //string const filename = "/home/luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for ubuntu
-  string const filename = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for mac
+  string const filename = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for ubuntu
+  //string const filename = "/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root"; // for mac
   TFile *file = new TFile(filename.c_str());
 
   TIter iter(file -> GetListOfKeys());
@@ -102,11 +102,12 @@ void loop_on_histos(){
 
       if(hist_name.find("HE") != std::string::npos){
         hist_minv_integrated -> Add(hist_minv);
-        //fit_of_minv(hist_minv,counter_cost,counter_phi);
+        fit_of_minv(hist_minv,counter_cost,counter_phi);
 
         if(counter_phi < N_phi_bins){
           N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
           Stat_Jpsi_HE[counter_cost][counter_phi] = stat_jpsi;
+          //if(counter_cost == 0 || counter_cost == N_cost_bins-1){N_Jpsi_HE[counter_cost][counter_phi] = 0; Stat_Jpsi_HE[counter_cost][counter_phi] = 0;}
           counter_phi++;
         }
         else{
@@ -122,7 +123,7 @@ void loop_on_histos(){
       }
   }
 
-  //fit_of_minv(hist_minv_integrated,100,100);
+  fit_of_minv(hist_minv_integrated,100,100);
 
   int integral = 0;
   for(int i = 0;i < N_Jpsi.size();i++){
@@ -130,12 +131,10 @@ void loop_on_histos(){
   }
   cout << "SUM OF HISTOS = " << integral << endl;
 
-  file -> ls();
   //TH1D *hist_prova = (TH1D*) file -> Get("HE_2pt6");
   //fit_of_minv(hist_prova,100,100);
 
   //hist_prova -> Draw();
-  return;
 
   //============================================================================
   //MATRIX OF THE SIGNAL
@@ -168,10 +167,10 @@ void loop_on_histos(){
     output_tree -> Branch("Stat_Jpsi_HE",Stat_Jpsi_HE,"Stat_Jpsi_HE[18][10]/I");
     output_tree -> Fill();
 
-    TFile *output_file = new TFile("/Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/N_Jpsi.root","RECREATE");
+    TFile *output_file = new TFile("~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/N_Jpsi.root","RECREATE");
     output_tree -> Write();
     output_file -> Close();
-    printf("The file is saved in /Users/Luca/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
+    printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
   }
 
 }
