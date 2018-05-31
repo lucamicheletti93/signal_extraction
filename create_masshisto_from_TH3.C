@@ -67,6 +67,16 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[4]); // 4 < pT < 5 GeV/c
   hMassCostPhiHE_2pt6_2m -> Add(hMassCostPhiHE_2m[5]); // 5 < pT < 6 GeV/c
 
+  cout << hMassCostPhiHE_2m[2] -> GetEntries() << endl;
+  cout << hMassCostPhiHE_2m[3] -> GetEntries() << endl;
+  cout << hMassCostPhiHE_2m[4] -> GetEntries() << endl;
+  cout << hMassCostPhiHE_2m[5] -> GetEntries() << endl;
+  cout << hMassCostPhiHE_2pt6_2m -> GetEntries() << endl;
+
+
+
+  return;
+
   sprintf(TH3_NAME,"hMassCostPhiHE_%ipt%i_2m",min_pt_bin[2],max_pt_bin[2]);
   TH3D *hMassCostPhiHE_6pt12_2m = (TH3D*) hMassCostPhiHE_2m[6] -> Clone(); // 6 < pT < 7 GeV/c
   hMassCostPhiHE_6pt12_2m -> SetTitle(TH3_NAME);
@@ -121,9 +131,11 @@ void create_masshisto_from_TH3(bool save_file = kFALSE){
   //hist_mass_HE = (TH1D*) hMassCostPhiHE_2m_2pt6_prova -> ProjectionZ(hist_mass_HE_name,-1,1,0,PI);
   //if(save_file){FILE_OUT_COST_PHI_2pt6.cd(); hist_mass_HE -> SetTitle(hist_mass_HE_name); hist_mass_HE -> Write();}
 
-  FILE_OUT_COST_PHI_0pt2.Close();
-  FILE_OUT_COST_PHI_2pt6.Close();
-  FILE_OUT_COST_PHI_6pt12.Close();
+  if(save_file){
+    FILE_OUT_COST_PHI_0pt2.Close();
+    FILE_OUT_COST_PHI_2pt6.Close();
+    FILE_OUT_COST_PHI_6pt12.Close();
+  }
 
   TCanvas *c_grid = new TCanvas("c_grid","c_grid",20,20,600,600);
   TH2D *h_grid = new TH2D("h_grid","",100,-1,1,100,0,PI);

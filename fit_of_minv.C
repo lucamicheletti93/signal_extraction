@@ -74,7 +74,7 @@ void loop_on_histos(){
   gSystem -> CompileMacro("settings.h");
   gROOT -> ProcessLine(".x binning.C");
 
-  bool save_tree = kTRUE;
+  bool save_tree = kFALSE;
   //const int N_cost_bins = 18;
   //const int N_phi_bins = 10;
   int N_Jpsi_HE[N_cost_bins][N_phi_bins];
@@ -102,7 +102,7 @@ void loop_on_histos(){
 
       if(hist_name.find("HE") != std::string::npos){
         hist_minv_integrated -> Add(hist_minv);
-        fit_of_minv(hist_minv,counter_cost,counter_phi);
+        //fit_of_minv(hist_minv,counter_cost,counter_phi);
 
         if(counter_phi < N_phi_bins){
           N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
@@ -131,6 +131,8 @@ void loop_on_histos(){
   }
   cout << "SUM OF HISTOS = " << integral << endl;
 
+  cout << hist_minv_integrated -> GetEntries() << endl;
+
   //TH1D *hist_prova = (TH1D*) file -> Get("HE_2pt6");
   //fit_of_minv(hist_prova,100,100);
 
@@ -139,6 +141,19 @@ void loop_on_histos(){
   //============================================================================
   //MATRIX OF THE SIGNAL
   //============================================================================
+
+  TH2D *hist_N_Jpsi_HE = new TH2D("hist_N_Jpsi_HE","hist_N_Jpsi_HE",N_cost_bins,value_cost,N_phi_bins,value_phi);
+
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
+      hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,N_Jpsi_HE[i][j]);
+      hist_N_Jpsi_HE -> SetBinError(i+1,j+1,Stat_Jpsi_HE[i][j]);
+    }
+  }
+
+  TCanvas *ccc = new TCanvas("ccc","ccc",20,20,600,600);
+  hist_N_Jpsi_HE -> Draw("COLZ");
+
 
   printf("MATRIX OF N_Jpsi \n");
   for(int i = 0;i < N_cost_bins;i++){

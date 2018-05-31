@@ -59,6 +59,10 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   TH3D *hMassCostPhiHE_11pt12_2m = new TH3D("hMassCostPhiHE_11pt12_2m","hMassCostPhiHE_11pt12_2m",100,-1,1,50,0,PI,120,2,5);
   TH3D *hMassCostPhiHE_12ptinf_2m = new TH3D("hMassCostPhiHE_12ptinf_2m","hMassCostPhiHE_12ptinf_2m",100,-1,1,50,0,PI,120,2,5);
 
+  TH3D *hMassCostPhiHE_0pt2_2m = new TH3D("hMassCostPhiHE_0pt2_2m","hMassCostPhiHE_0pt2_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_2pt6_2m = new TH3D("hMassCostPhiHE_2pt6_2m","hMassCostPhiHE_2pt6_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiHE_6pt12_2m = new TH3D("hMassCostPhiHE_6pt12_2m","hMassCostPhiHE_6pt12_2m",100,-1,1,50,0,PI,120,2,5);
+
   TH3D *hMassCostPhiCS_0pt1_2m = new TH3D("hMassCostPhiCS_0pt1_2m","hMassCostPhiCS_0pt1_2m",100,-1,1,50,0,PI,120,2,5);
   TH3D *hMassCostPhiCS_1pt2_2m = new TH3D("hMassCostPhiCS_1pt2_2m","hMassCostPhiCS_1pt2_2m",100,-1,1,50,0,PI,120,2,5);
   TH3D *hMassCostPhiCS_2pt3_2m = new TH3D("hMassCostPhiCS_2pt3_2m","hMassCostPhiCS_2pt3_2m",100,-1,1,50,0,PI,120,2,5);
@@ -72,6 +76,10 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   TH3D *hMassCostPhiCS_10pt11_2m = new TH3D("hMassCostPhiCS_10pt11_2m","hMassCostPhiCS_10pt11_2m",100,-1,1,50,0,PI,120,2,5);
   TH3D *hMassCostPhiCS_11pt12_2m = new TH3D("hMassCostPhiCS_11pt12_2m","hMassCostPhiCS_11pt12_2m",100,-1,1,50,0,PI,120,2,5);
   TH3D *hMassCostPhiCS_12ptinf_2m = new TH3D("hMassCostPhiCS_12ptinf_2m","hMassCostPhiCS_12ptinf_2m",100,-1,1,50,0,PI,120,2,5);
+
+  TH3D *hMassCostPhiCS_0pt2_2m = new TH3D("hMassCostPhiCS_0pt2_2m","hMassCostPhiCS_0pt2_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_2pt6_2m = new TH3D("hMassCostPhiCS_2pt6_2m","hMassCostPhiCS_2pt6_2m",100,-1,1,50,0,PI,120,2,5);
+  TH3D *hMassCostPhiCS_6pt12_2m = new TH3D("hMassCostPhiCS_6pt12_2m","hMassCostPhiCS_6pt12_2m",100,-1,1,50,0,PI,120,2,5);
   //============================================================================
   //OPENING THE FILE
   //============================================================================
@@ -218,6 +226,10 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
                 if(DimuPt[k] > 10 && DimuPt[k] <= 11){hMassCostPhiHE_10pt11_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_10pt11_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
                 if(DimuPt[k] > 11 && DimuPt[k] <= 12){hMassCostPhiHE_11pt12_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_11pt12_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
                 if(DimuPt[k] > 12){hMassCostPhiHE_12ptinf_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_12ptinf_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
+
+                if(DimuPt[k] > 0 && DimuPt[k] <= 2){hMassCostPhiHE_0pt2_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_0pt2_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
+                if(DimuPt[k] > 2 && DimuPt[k] <= 6){hMassCostPhiHE_2pt6_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_2pt6_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
+                if(DimuPt[k] > 6 && DimuPt[k] <= 12){hMassCostPhiHE_6pt12_2m -> Fill(CostHE[k],TMath::Abs(PhiHE[k]),DimuMass[k]); hMassCostPhiCS_6pt12_2m -> Fill(CostCS[k],TMath::Abs(PhiCS[k]),DimuMass[k]);}
               }
             }
           }
@@ -263,6 +275,10 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   hMassCostPhiHE_11pt12_2m -> Write();
   hMassCostPhiHE_12ptinf_2m -> Write();
 
+  hMassCostPhiHE_0pt2_2m -> Write();
+  hMassCostPhiHE_2pt6_2m -> Write();
+  hMassCostPhiHE_6pt12_2m -> Write();
+
   hMassCostPhiCS_0pt1_2m -> Write();
   hMassCostPhiCS_1pt2_2m -> Write();
   hMassCostPhiCS_2pt3_2m -> Write();
@@ -276,6 +292,10 @@ void create_TH3_from_tree(int RUN_NUMBER = 246984){
   hMassCostPhiCS_10pt11_2m -> Write();
   hMassCostPhiCS_11pt12_2m -> Write();
   hMassCostPhiCS_12ptinf_2m -> Write();
+
+  hMassCostPhiCS_0pt2_2m -> Write();
+  hMassCostPhiCS_2pt6_2m -> Write();
+  hMassCostPhiCS_6pt12_2m -> Write();
 
   clock2 -> Stop();
   clock2 -> Print(); //<-
