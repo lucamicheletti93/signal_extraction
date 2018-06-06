@@ -117,7 +117,63 @@ void loop_on_histos(){
   string const filename = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root";
   TFile *file = new TFile(filename.c_str());
 
-  TIter iter(file -> GetListOfKeys());
+  //============================================================================
+  char hist_mass_HE_name[100];
+
+  TH2D *hist_N_Jpsi_HE = new TH2D("hist_N_Jpsi_HE","hist_N_Jpsi_HE",N_cost_bins,value_cost,N_phi_bins,value_phi);
+
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
+      sprintf(hist_mass_HE_name,"HE_2pt6_%icost%i_%iphi%i",min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
+      TH1D *hist_minv = (TH1D*) file -> Get(hist_mass_HE_name);
+      hist_minv_integrated -> Add(hist_minv);
+      fit_of_minv(hist_minv,i,j);
+
+      N_Jpsi_HE[i][j] = n_jpsi;
+      Stat_Jpsi_HE[i][j] = stat_jpsi;
+
+      hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,N_Jpsi_HE[i][j]);
+      hist_N_Jpsi_HE -> SetBinError(i+1,j+1,Stat_Jpsi_HE[i][j]);
+
+      if(i == 0 || i == N_cost_bins-1){
+        hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,0);
+        hist_N_Jpsi_HE -> SetBinError(i+1,j+1,0);
+      }
+    }
+  }
+
+  printf("MATRIX OF N_Jpsi \n");
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
+      cout << N_Jpsi_HE[i][j] << ",";
+    }
+    cout << endl;
+  }
+
+
+  printf("MATRIX OF STAT ERRORS \n");
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
+      cout << Stat_Jpsi_HE[i][j] << ",";
+    }
+    cout << endl;
+  }
+
+  hist_N_Jpsi_HE -> Draw("COLZtext");
+
+  //============================================================================
+  // SAVE RESULTS INTO A TREE
+  //============================================================================
+
+  if(save_tree){
+    TFile *output_file = new TFile("~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/N_Jpsi.root","RECREATE");
+    hist_N_Jpsi_HE -> Write();
+    output_file -> Close();
+    printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
+  }
+
+  //============================================================================
+  /*TIter iter(file -> GetListOfKeys());
   TKey *key;
   while(key = (TKey*)iter()){
       TObject *obj = key -> ReadObj();
@@ -145,7 +201,10 @@ void loop_on_histos(){
         N_Jpsi.push_back(n_jpsi);
         stat_Jpsi.push_back(stat_jpsi);
       }
-  }
+  }*/
+  //============================================================================
+
+  /*return;
 
   fit_of_minv(hist_minv_integrated,100,100);
 
@@ -211,7 +270,7 @@ void loop_on_histos(){
     hist_N_Jpsi_HE -> Write();
     output_file -> Close();
     printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
-  }
+  }*/
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,6 +359,7 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
       func_tot -> SetParameter(4,func_Jpsi_CB2 -> GetParameter(4));
       func_tot -> SetParLimits(4,0,10000000);
       func_tot -> SetParameter(5,3.096);
+      func_tot -> SetParLimits(5,2.7,3.3);
       func_tot -> SetParameter(6,7.0e-02);
       func_tot -> SetParLimits(6,6.0e-02,9.0e-02);
 
@@ -434,7 +494,7 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   char title[100];
 
   double max_histo_value = func_bck_VWG_fix -> GetMaximum();
-  max_histo_value = max_histo_value + 0.4*max_histo_value;
+  max_histo_value = max_histo_value + 0.6*max_histo_value;
 
   TH2D *h_spectrum = new TH2D("h_spectrum","",120,2,5,100,0,max_histo_value);
   h_spectrum -> GetXaxis() -> SetTitle("#it{m}_{#mu^{#plus}#mu^{#minus}} (GeV/#it{c}^{2})");
@@ -494,7 +554,7 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   lat7 -> SetNDC();
   lat7 -> SetTextFont(42);
 
-  TCanvas *c_spectrum = new TCanvas("c_spectrum","c_spectrum",65,73,900,806);
+  /*TCanvas *c_spectrum = new TCanvas("c_spectrum","c_spectrum",65,73,900,806);
   c_spectrum -> Range(1.825,-6776.052,5.019444,37862.12);
   c_spectrum -> SetFillColor(0);
   c_spectrum -> SetBorderMode(0);
@@ -518,15 +578,11 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   lat4 -> Draw();
   lat5 -> Draw();
   lat6 -> Draw();
-  lat7 -> Draw();
-  //lat6 -> Draw();
-  //func_Psi2s_CB2_fix -> Draw("same");
-  //t_spectrum -> Draw();
+  lat7 -> Draw();*/
 
-  //char hist_name[30];
+  //char hist_name[50];
   //sprintf(hist_name,"FIT_PLOTS/%s.png",hist_minv -> GetName());
   //c_spectrum -> SaveAs(hist_name);
-  //delete c_spectrum;
 }
 //==============================================================================
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
