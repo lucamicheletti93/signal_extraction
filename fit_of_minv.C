@@ -52,10 +52,10 @@ char test_label[100], fit_status[10];
 //==============================================================================
 void single_histo_fit(){
 
-  string const filename = "mass_histos_cost_phi_2pt6.root";
+  string const filename = "~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/mass_histos_cost_phi_2pt6.root";
   TFile *file = new TFile(filename.c_str());
 
-  TH1D *hist_minv = (TH1D*) file -> Get("HE_2pt6_1cost25_36phi50");
+  TH1D *hist_minv = (TH1D*) file -> Get("HE_2pt6_11cost20_28phi30");
   hist_minv -> SetMarkerStyle(20);
   hist_minv -> SetMarkerSize(0.7);
   min_cost = -1, max_cost = -0.5, min_phi = 2.2, max_phi = 3.14;
@@ -124,6 +124,13 @@ void loop_on_histos(){
 
   for(int i = 0;i < N_cost_bins;i++){
     for(int j = 0;j < N_phi_bins;j++){
+      N_Jpsi_HE[i][j] = 0;
+      Stat_Jpsi_HE[i][j] = 0;
+    }
+  }
+
+  for(int i = 1;i < N_cost_bins-1;i++){
+    for(int j = 1;j < N_phi_bins-1;j++){
       sprintf(hist_mass_HE_name,"HE_2pt6_%icost%i_%iphi%i",min_cost_bin[i],max_cost_bin[i],min_phi_bin[j],max_phi_bin[j]);
       TH1D *hist_minv = (TH1D*) file -> Get(hist_mass_HE_name);
       hist_minv_integrated -> Add(hist_minv);
@@ -131,16 +138,19 @@ void loop_on_histos(){
 
       N_Jpsi_HE[i][j] = n_jpsi;
       Stat_Jpsi_HE[i][j] = stat_jpsi;
-
-      hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,N_Jpsi_HE[i][j]);
-      hist_N_Jpsi_HE -> SetBinError(i+1,j+1,Stat_Jpsi_HE[i][j]);
-
-      if(i == 0 || i == N_cost_bins-1){
-        hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,0);
-        hist_N_Jpsi_HE -> SetBinError(i+1,j+1,0);
-      }
     }
   }
+
+  //============================================================================
+
+  for(int i = 0;i < N_cost_bins;i++){
+    for(int j = 0;j < N_phi_bins;j++){
+      hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,N_Jpsi_HE[i][j]);
+      hist_N_Jpsi_HE -> SetBinError(i+1,j+1,Stat_Jpsi_HE[i][j]);
+    }
+  }
+
+  //============================================================================
 
   printf("MATRIX OF N_Jpsi \n");
   for(int i = 0;i < N_cost_bins;i++){
@@ -171,106 +181,6 @@ void loop_on_histos(){
     output_file -> Close();
     printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
   }
-
-  //============================================================================
-  /*TIter iter(file -> GetListOfKeys());
-  TKey *key;
-  while(key = (TKey*)iter()){
-      TObject *obj = key -> ReadObj();
-      TH1D *hist_minv = dynamic_cast<TH1D*>(obj);
-      hist_name = hist_minv -> GetName();
-
-      if(hist_name.find("HE") != std::string::npos){
-        hist_minv_integrated -> Add(hist_minv);
-        fit_of_minv(hist_minv,counter_cost,counter_phi);
-
-        if(counter_phi < N_phi_bins){
-          N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
-          Stat_Jpsi_HE[counter_cost][counter_phi] = stat_jpsi;
-          //if(counter_cost == 0 || counter_cost == N_cost_bins-1){N_Jpsi_HE[counter_cost][counter_phi] = 0; Stat_Jpsi_HE[counter_cost][counter_phi] = 0;}
-          counter_phi++;
-        }
-        else{
-          counter_cost++;
-          counter_phi = 0;
-          N_Jpsi_HE[counter_cost][counter_phi] = n_jpsi;
-          Stat_Jpsi_HE[counter_cost][counter_phi] = stat_jpsi;
-          counter_phi++;
-        }
-
-        N_Jpsi.push_back(n_jpsi);
-        stat_Jpsi.push_back(stat_jpsi);
-      }
-  }*/
-  //============================================================================
-
-  /*return;
-
-  fit_of_minv(hist_minv_integrated,100,100);
-
-  int integral = 0;
-  for(int i = 0;i < N_Jpsi.size();i++){
-    integral += N_Jpsi[i];
-  }
-  cout << "SUM OF HISTOS = " << integral << endl;
-
-  cout << hist_minv_integrated -> GetEntries() << endl;
-
-  //TH1D *hist_prova = (TH1D*) file -> Get("HE_2pt6");
-  //fit_of_minv(hist_prova,100,100);
-
-  //hist_prova -> Draw();
-
-  //============================================================================
-  //MATRIX OF THE SIGNAL
-  //============================================================================
-
-  TH2D *hist_N_Jpsi_HE = new TH2D("hist_N_Jpsi_HE","hist_N_Jpsi_HE",N_cost_bins,value_cost,N_phi_bins,value_phi);
-
-  for(int i = 0;i < N_cost_bins;i++){
-    for(int j = 0;j < N_phi_bins;j++){
-      hist_N_Jpsi_HE -> SetBinContent(i+1,j+1,N_Jpsi_HE[i][j]);
-      hist_N_Jpsi_HE -> SetBinError(i+1,j+1,Stat_Jpsi_HE[i][j]);
-    }
-  }
-
-  TCanvas *ccc = new TCanvas("ccc","ccc",20,20,600,600);
-  hist_N_Jpsi_HE -> Draw("COLZtext");
-
-
-  printf("MATRIX OF N_Jpsi \n");
-  for(int i = 0;i < N_cost_bins;i++){
-    for(int j = 0;j < N_phi_bins;j++){
-      cout << N_Jpsi_HE[i][j] << ",";
-    }
-    cout << endl;
-  }
-
-
-  printf("MATRIX OF STAT ERRORS \n");
-  for(int i = 0;i < N_cost_bins;i++){
-    for(int j = 0;j < N_phi_bins;j++){
-      cout << Stat_Jpsi_HE[i][j] << ",";
-    }
-    cout << endl;
-  }
-
-  //============================================================================
-  // SAVE RESULTS INTO A TREE
-  //============================================================================
-
-  if(save_tree){
-    TTree *output_tree = new TTree("CB2_VWG","CB2_VWG");
-    output_tree -> Branch("N_Jpsi_HE",N_Jpsi_HE,"N_Jpsi_HE[18][10]/I");
-    output_tree -> Branch("Stat_Jpsi_HE",Stat_Jpsi_HE,"Stat_Jpsi_HE[18][10]/I");
-    output_tree -> Fill();
-
-    TFile *output_file = new TFile("~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/N_Jpsi.root","RECREATE");
-    output_tree -> Write();
-    hist_N_Jpsi_HE -> Write();
-    output_file -> Close();
-    printf("The file is saved in ~/cernbox/JPSI/JPSI_POLARIZATION/ANALYSIS/TWO_DIM_APPROACH/SIGNAL_EXTRACTION/HISTOS_FOR_SIGNAL_EXTRACTION/GIT_OUTPUT/ \n");
-  }*/
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -309,12 +219,11 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
     histo_for_bck -> SetBinError(i+1,0);
   }
 
-  histo_for_bck -> Draw();
-
   double par_bck[4] = {500000.,0.6,0.4,0.2};
   double *par_bck_ptr = par_bck;
 
-  TF1 *func_bck_VWG = new TF1("func_bck_VWG",Func_VWG,2.2,5.5,4);
+  //TF1 *func_bck_VWG = new TF1("func_bck_VWG",Func_VWG,2.2,5.5,4);
+  TF1 *func_bck_VWG = new TF1("func_bck_VWG",Func_VWG,2.1,4.9,4);
   func_bck_VWG -> SetParameters(par_bck_ptr);
   histo_for_bck -> Fit(func_bck_VWG,"R0");
 
@@ -361,7 +270,7 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
       func_tot -> SetParameter(5,3.096);
       func_tot -> SetParLimits(5,2.7,3.3);
       func_tot -> SetParameter(6,7.0e-02);
-      func_tot -> SetParLimits(6,6.0e-02,9.0e-02);
+      func_tot -> SetParLimits(6,5.0e-02,1.2e-01);
 
       if(strcmp(tails_fix,"yes")==0){
         func_tot -> FixParameter(7,func_Jpsi_CB2 -> GetParameter(7));
@@ -410,19 +319,6 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
     Jpsi_par[i] = func_tot -> GetParameter(4+i);
   }
 
-  //PSI(2S) MATRIX
-  //double Psi2s_mat[64];
-  //for(Int_t i = 0;i < 8;i++){
-    //for(Int_t j = 0;j < 8;j++){
-        //Psi2s_mat[8*i+j] = fullmat[52+j+12*i];
-    //}
-  //}
-
-  //double Psi2s_par[8];
-  //for(int i = 0;i < 8;i++){
-    //Psi2s_par[i] = func_tot -> GetParameter(4+i);
-  //}
-
   //============================================================================
   //PLOT OF JPSI AND PSI(2S) SHAPES
   //============================================================================
@@ -447,53 +343,22 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   func_Jpsi_CB2_fix -> SetLineStyle(2);
   func_Jpsi_CB2_fix -> Draw("same");
 
-  //TF1 *func_Psi2s_CB2_fix = new TF1("func_Psi2s_CB2_fix",Func_Psi2s_CB2_fix,2.,5.,8);
-  //func_Psi2s_CB2_fix -> SetParameter(0,func_tot -> GetParameter(4));
-  //func_Psi2s_CB2_fix -> SetParameter(1,func_tot -> GetParameter(5));
-  //func_Psi2s_CB2_fix -> SetParameter(2,func_tot -> GetParameter(6));
-  //func_Psi2s_CB2_fix -> SetParameter(3,func_tot -> GetParameter(7));
-  //func_Psi2s_CB2_fix -> SetParameter(4,func_tot -> GetParameter(8));
-  //func_Psi2s_CB2_fix -> SetParameter(5,func_tot -> GetParameter(9));
-  //func_Psi2s_CB2_fix -> SetParameter(6,func_tot -> GetParameter(10));
-  //func_Psi2s_CB2_fix -> SetParameter(7,func_tot -> GetParameter(11));
-  //func_Psi2s_CB2_fix -> SetLineStyle(2);
-  //func_Psi2s_CB2_fix -> Draw("same");
-
-  //////////////////////////////////////////////////////////////////////////////
-  //SIGNAL/BACKGROUND
-  //////////////////////////////////////////////////////////////////////////////
+  double mass_Jpsi = func_tot -> GetParameter(5);
+  double sigma_Jpsi = func_tot -> GetParameter(6);
   double sigma_min_Jpsi = func_tot -> GetParameter(5) - 3*(func_tot -> GetParameter(6));
   double sigma_max_Jpsi = func_tot -> GetParameter(5) + 3*(func_tot -> GetParameter(6));
   double N_Jpsi_3sigma = func_Jpsi_CB2_fix -> Integral(sigma_min_Jpsi,sigma_max_Jpsi)/m_width;
   double N_bck_Jpsi_3sigma = func_bck_VWG_fix -> Integral(sigma_min_Jpsi,sigma_max_Jpsi)/m_width;
   double SB_Jpsi = N_Jpsi_3sigma/N_bck_Jpsi_3sigma;
-  double sigma_Jpsi = func_tot -> GetParameter(6);
-  //double sigma_min_Psi2s = func_tot -> GetParameter(5) + (3.686-3.097) - 3*(func_tot -> GetParameter(6)*scaling_factor);
-  //double sigma_max_Psi2s = func_tot -> GetParameter(5) + (3.686-3.097) + 3*(func_tot -> GetParameter(6)*scaling_factor);
-  //double N_Psi2s_3sigma = func_Psi2s_CB2_fix -> Integral(sigma_min_Psi2s,sigma_max_Psi2s)/m_width;
-  //double N_bck_Psi2s_3sigma = func_bck_VWG_fix -> Integral(sigma_min_Psi2s,sigma_max_Psi2s)/m_width;
-  //double SB_Psi2s = N_Psi2s_3sigma/N_bck_Psi2s_3sigma;
-  //////////////////////////////////////////////////////////////////////////////
-
-  //============================================================================
-  //NUMERICAL RESULTS
-  //============================================================================
-
-  //n_psi2s = func_Psi2s_CB2_fix -> Integral(0,5)/m_width;
-  //stat_psi2s = func_Psi2s_CB2_fix -> IntegralError(0.,5.,Psi2s_par,Psi2s_mat)/m_width;
   n_jpsi = func_Jpsi_CB2_fix -> Integral(0,5)/m_width;
   stat_jpsi = func_Jpsi_CB2_fix -> IntegralError(0.,5.,Jpsi_par,Jpsi_mat)/m_width;
-
-  //cout << "N Psi(2S) = " << n_psi2s << " +- " << stat_psi2s << endl;
-  cout << "N Jpsi = " << n_jpsi << " +- " << stat_jpsi << endl;
-  cout << "S/B Jpsi = " << SB_Jpsi << endl;
 
   //============================================================================
   //PLOT OF THE TOTAL SPECTRUM
   //============================================================================
   char title[100];
 
-  double max_histo_value = func_bck_VWG_fix -> GetMaximum();
+  double max_histo_value = hist_minv -> GetMaximum();
   max_histo_value = max_histo_value + 0.6*max_histo_value;
 
   TH2D *h_spectrum = new TH2D("h_spectrum","",120,2,5,100,0,max_histo_value);
@@ -507,54 +372,72 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   h_spectrum -> GetYaxis() -> SetTitleOffset(1.2);
   h_spectrum -> GetYaxis() -> SetLabelSize(0.05);
 
-  TLatex *lat0 = new TLatex(0.45,0.82,"ALICE Performance");
-  lat0 -> SetTextSize(0.05);
-  lat0 -> SetNDC();
-  lat0 -> SetTextFont(42);
+  //TLatex *lat0 = new TLatex(0.45,0.82,"ALICE Performance");
+  //lat0 -> SetTextSize(0.05);
+  //lat0 -> SetNDC();
+  //lat0 -> SetTextFont(42);
 
-  TLatex *lat1 = new TLatex(0.45,0.76,"Pb-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
-  lat1 -> SetTextSize(0.05);
-  lat1 -> SetNDC();
-  lat1 -> SetTextFont(42);
+  //TLatex *lat1 = new TLatex(0.45,0.76,"Pb-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  //lat1 -> SetTextSize(0.05);
+  //lat1 -> SetNDC();
+  //lat1 -> SetTextFont(42);
 
-  TLatex *lat2 = new TLatex(0.45,0.70,"Inclusive J/#psi #rightarrow #mu^{#plus}#mu^{#minus}");
-  lat2 -> SetTextSize(0.05);
+  //TLatex *lat2 = new TLatex(0.45,0.70,"Inclusive J/#psi #rightarrow #mu^{#plus}#mu^{#minus}");
+  //lat2 -> SetTextSize(0.05);
+  //lat2 -> SetNDC();
+  //lat2 -> SetTextFont(42);
+
+  //sprintf(title,"%i < #it{p}_{T} < %i GeV/#it{c}",2,6);
+  //TLatex *lat3 = new TLatex(0.49,0.62,title);
+  //lat3 -> SetTextSize(0.05);
+  //lat3 -> SetNDC();
+  //lat3 -> SetTextFont(42);
+
+  //sprintf(title,"%2.1f < #it{y} < %i",2.5,4);
+  //TLatex *lat4 = new TLatex(0.49,0.55,title);
+  //lat4 -> SetTextSize(0.05);
+  //lat4 -> SetNDC();
+  //lat4 -> SetTextFont(42);
+
+  sprintf(title,"N_{J/#psi} = %2.0f #pm %2.0f",n_jpsi,stat_jpsi);
+  TLatex *lat2 = new TLatex(0.55,0.82,title);
+  lat2 -> SetTextSize(0.04);
   lat2 -> SetNDC();
   lat2 -> SetTextFont(42);
 
-  sprintf(title,"%i < #it{p}_{T} < %i GeV/#it{c}",2,6);
-  TLatex *lat3 = new TLatex(0.49,0.62,title);
-  lat3 -> SetTextSize(0.05);
+  sprintf(title,"#it{m}_{J/#psi} = %4.3f GeV/#it{c}^{2}",mass_Jpsi);
+  TLatex *lat3 = new TLatex(0.55,0.76,title);
+  lat3 -> SetTextSize(0.04);
   lat3 -> SetNDC();
   lat3 -> SetTextFont(42);
 
-  sprintf(title,"%2.1f < #it{y} < %i",2.5,4);
-  TLatex *lat4 = new TLatex(0.49,0.55,title);
-  lat4 -> SetTextSize(0.05);
+  sprintf(title,"#it{#sigma}_{J/#psi} = %3.2f MeV/#it{c}^{2}",sigma_Jpsi*1000);
+  TLatex *lat4 = new TLatex(0.55,0.70,title);
+  lat4 -> SetTextSize(0.04);
   lat4 -> SetNDC();
   lat4 -> SetTextFont(42);
 
   sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",value_cost[counter_cost],value_cost[counter_cost+1]);
   if(counter_cost == 100) sprintf(title,"%2.1f < cos#it{#theta}^{HX} < %2.1f",-1.,1.);
-  TLatex *lat5 = new TLatex(0.49,0.48,title);
-  lat5 -> SetTextSize(0.05);
+  TLatex *lat5 = new TLatex(0.55,0.62,title);
+  lat5 -> SetTextSize(0.04);
   lat5 -> SetNDC();
   lat5 -> SetTextFont(42);
 
   sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",value_phi[counter_phi],value_phi[counter_phi+1]);
   if(counter_phi == 100) sprintf(title,"%3.2f < #it{#varphi}^{HX} < %3.2f rad",0.,PI);
-  TLatex *lat6 = new TLatex(0.49,0.41,title);
-  lat6 -> SetTextSize(0.05);
+  TLatex *lat6 = new TLatex(0.55,0.55,title);
+  lat6 -> SetTextSize(0.04);
   lat6 -> SetNDC();
   lat6 -> SetTextFont(42);
 
   sprintf(title,"#chi^{2}/ndf = %3.1f",ChiSquare_NDF);
-  TLatex *lat7 = new TLatex(0.55,0.34,title);
-  lat7 -> SetTextSize(0.05);
+  TLatex *lat7 = new TLatex(0.55,0.48,title);
+  lat7 -> SetTextSize(0.04);
   lat7 -> SetNDC();
   lat7 -> SetTextFont(42);
 
-  /*TCanvas *c_spectrum = new TCanvas("c_spectrum","c_spectrum",65,73,900,806);
+  TCanvas *c_spectrum = new TCanvas("c_spectrum","c_spectrum",65,73,900,806);
   c_spectrum -> Range(1.825,-6776.052,5.019444,37862.12);
   c_spectrum -> SetFillColor(0);
   c_spectrum -> SetBorderMode(0);
@@ -571,18 +454,18 @@ void fit_of_minv(TH1D *hist_minv, int counter_cost, int counter_phi){
   func_bck_VWG_fix -> Draw("same");
   func_tot -> Draw("same");
   func_Jpsi_CB2_fix -> Draw("same");
-  lat0 -> Draw();
-  lat1 -> Draw();
+  //lat0 -> Draw();
+  //lat1 -> Draw();
   lat2 -> Draw();
   lat3 -> Draw();
   lat4 -> Draw();
   lat5 -> Draw();
   lat6 -> Draw();
-  lat7 -> Draw();*/
+  lat7 -> Draw();
 
-  //char hist_name[50];
-  //sprintf(hist_name,"FIT_PLOTS/%s.png",hist_minv -> GetName());
-  //c_spectrum -> SaveAs(hist_name);
+  char hist_name[50];
+  sprintf(hist_name,"../FIT_PLOTS/%s.png",hist_minv -> GetName());
+  c_spectrum -> SaveAs(hist_name);
 }
 //==============================================================================
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
